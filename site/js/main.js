@@ -3,7 +3,7 @@ import { Stage } from './stage.js';
 import { Archive } from './archive.js';
 import { PatientChart, Y0 } from './patient.js';
 import { stoneFloor } from './textures.js';
-import { tweens, easeInOutCubic, easeInOutQuint, fmtDate, fmtInt, esc, chapterCss, problemColor, SECTION_LABEL, FINDING_LABEL, dateNum, damp } from './util.js';
+import { clock, tweens, easeInOutCubic, easeInOutQuint, fmtDate, fmtInt, esc, chapterCss, problemColor, SECTION_LABEL, FINDING_LABEL, dateNum, damp } from './util.js';
 import * as UI from './ui.js';
 import { Tour } from './tour.js';
 
@@ -15,7 +15,10 @@ let level = 'boot', busy = false, time = 0, touring = false;
 const filt = { q: '', sex: 'all', amin: 0, amax: 100, wing: '', trace: null };
 let match = null, traceSet = null;
 
-const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
+const RECORD = new URLSearchParams(location.search).has('record');
+clock.virtual = RECORD;
+if (RECORD) document.body.classList.add('recording');
+const sleep = (s) => clock.sleep(s);
 const progress = (v, note) => { $('#loadbar').style.width = `${Math.round(v * 100)}%`; if (note) $('#loadnote').textContent = note; };
 
 // ------------------------------------------------------------------ camera moves
@@ -108,6 +111,7 @@ async function boot() {
   camera.position.set(0, 7.5, archive.R * 3.2 + 6);
   controls.target.set(0, 1.4, -archive.R * 0.4);
   controls.update();
+  if (RECORD) { stage.maxDpr = 1.5; stage.fixedQuality = true; stage.setRung(0); } else stage.setRung(stage.guessRung());
   stage.renderer.compile(scene, camera);
   stage.render(0.016);
   progress(1, 'Ready');
@@ -116,7 +120,7 @@ async function boot() {
   level = 'hospital';
   UI.legendLevel(1);
   applyControlLimits();
-  setTimeout(() => $('#intro').classList.remove('hidden'), 900);
+  if (!RECORD) setTimeout(() => $('#intro').classList.remove('hidden'), 900);
   await flyTo(hospitalPose(), 3.6, 0.02);
 }
 
@@ -640,6 +644,7 @@ function hint() {
 // ------------------------------------------------------------------ loop
 let last = performance.now();
 function tick(dt, doRender = true) {
+  if (clock.virtual) clock.advance(dt);
   time += dt;
   tweens.tick(dt);
   if (archive) archive.update(dt, camera);
@@ -655,10 +660,13 @@ function tick(dt, doRender = true) {
   if (level === 'hospital') placeBadges();
   if (busy) stage.renderer.shadowMap.needsUpdate = true;
   stage.hold = busy || texDirty || tweens.busy;
-  if (doRender) stage.render(dt);
+  // no-GPU machines: don't burn the CPU drawing behind the welcome card or the video
+  const covered = videoOpen || (stage.rung >= 5 && !$('#intro').classList.contains('hidden'));
+  if (doRender && !covered) stage.render(dt);
   else stage.preRender(dt);
 }
 function frame(now) {
+  if (RECORD) return;
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
   tick(dt);
@@ -695,9 +703,8 @@ const tour = new Tour({
   get archive() { return archive; }, get H() { return H; }, chart: () => chart,
 });
 function closeIntro() { $('#intro').classList.add('hidden'); }
-$('#starttour').onclick = () => { closeIntro(); tour.start(); };
 $('#explore').onclick = closeIntro;
-$('#abouttour').onclick = () => { $('#intro').classList.remove('hidden'); };
+$('#abouttour').onclick = () => openVideo();
 $('#intro').addEventListener('click', (e) => { if (e.target.id === 'intro') closeIntro(); });
 
 // "Why I built this" — Ivan Acuña's note. Audio only plays when the reader presses Listen.
@@ -746,6 +753,26 @@ document.querySelector('#why .bar').onclick = (e) => {
   if (isNaN(whyAudio.duration)) { whyAudio.addEventListener('loadedmetadata', go, { once: true }); whyAudio.load(); } else go();
 };
 $('#whybtn').onclick = openWhy;
+
+// The tour as a pre-rendered video: identical on every device; the live archive keeps its state behind it.
+let videoOpen = false;
+const vid = $('#tourvid');
+function openVideo() {
+  closeIntro();
+  if (!vid.src) vid.src = 'tour/tour.mp4';
+  $('#vend').classList.add('hidden');
+  $('#vid').classList.remove('hidden');
+  videoOpen = true;
+  vid.currentTime = 0;
+  vid.play().catch(() => {});
+}
+function closeVideo() { vid.pause(); videoOpen = false; $('#vid').classList.add('hidden'); }
+vid.onended = () => $('#vend').classList.remove('hidden');
+$('#watchtour').onclick = openVideo;
+$('#vclose').onclick = closeVideo;
+$('#vlive').onclick = closeVideo;
+$('#vreplay').onclick = () => { $('#vend').classList.add('hidden'); vid.currentTime = 0; vid.play(); };
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && videoOpen) closeVideo(); });
 $('#introwhy').onclick = () => { closeIntro(); openWhy(); };
 $('#whyclose').onclick = closeWhy;
 $('#why').addEventListener('click', (e) => { if (e.target.id === 'why') closeWhy(); });
@@ -755,6 +782,7 @@ boot().catch((e) => { console.error(e); $('#loadnote').textContent = 'Failed to 
 
 // debug hooks for automated screenshots
 window.__app = {
+  RECORD, clock, recordFrame(dt) { tick(dt, true); },
   tour,
   step, tick, hover(x, y) { mouse.set((x / innerWidth) * 2 - 1, -(y / innerHeight) * 2 + 1); clientXY = [x, y]; mouseMoved = true; tick(1 / 30, false); },
   click() { if (level === 'hospital' && hoverI >= 0) openPatient(hoverI); else if (level === 'patient') onPatientClick(); },

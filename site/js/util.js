@@ -90,3 +90,23 @@ export const fmtDate = (d) => {
 };
 export const dateNum = (d) => { const [y, m, dd] = d.split('-').map(Number); return Date.UTC(y, m - 1, dd) / 864e5; };
 export const fmtInt = (n) => n.toLocaleString('en-US');
+
+/**
+ * App clock. Normally real time; in record mode (?record) it only advances when a frame is
+ * rendered, so a captured video is deterministic and identical for every viewer.
+ */
+export const clock = {
+  virtual: false,
+  t: 0,
+  waiters: [],
+  sleep(s) {
+    if (!this.virtual) return new Promise((r) => setTimeout(r, s * 1000));
+    return new Promise((r) => this.waiters.push({ at: this.t + s, r }));
+  },
+  advance(dt) {
+    this.t += dt;
+    const due = this.waiters.filter((w) => w.at <= this.t + 1e-9);
+    this.waiters = this.waiters.filter((w) => w.at > this.t + 1e-9);
+    due.forEach((w) => w.r());
+  },
+};

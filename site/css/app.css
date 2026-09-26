@@ -253,3 +253,19 @@ body.lv2 #whybtn, body.touring #whybtn { opacity: 0; pointer-events: none; }
 #whybody.playing p { opacity: .45; }
 #whybody.playing p.on { opacity: 1; color: var(--ink); }
 @media (max-width: 900px) { #whybtn { top: auto; bottom: 64px; right: 12px; } }
+
+/* video tour */
+#vid { position: fixed; inset: 0; z-index: 48; display: grid; place-items: center; background: rgba(4,5,6,0.88); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: opacity .6s ease; }
+#vid .vwrap { position: relative; width: min(1280px, calc(100vw - 48px), calc((100vh - 120px) * 16 / 9)); aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); border: 1px solid var(--line); background: #000; }
+#vid video { width: 100%; height: 100%; display: block; background: #000; }
+#vid #vclose { position: fixed; top: 20px; right: 20px; width: 34px; height: 34px; font-size: 20px; }
+#vid .vnote { position: fixed; bottom: 22px; left: 0; right: 0; text-align: center; font-size: 12px; color: var(--muted); }
+#vend { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 10px; background: rgba(6,7,8,0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: opacity .5s ease; }
+#vend h3 { font-size: 24px; font-weight: 300; margin: 0 0 8px; max-width: 520px; }
+#vend .actions { display: flex; gap: 10px; justify-content: center; }
+#intro .btn .ico { width: 15px; height: 15px; }
+body.recording #tourbar .tctl, body.recording #whybtn, body.recording #hint, body.recording #legend { display: none; }
+
+.brandbtns { display: flex; gap: 8px; margin-top: 10px; }
+.brandbtns .tourbtn { margin-top: 0; }
+#intro .btn .ico.line { fill: none; stroke: currentColor; stroke-width: 1.8; }

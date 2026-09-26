@@ -3,3 +3,5 @@ synthetic_hospital/
 __pycache__/
 .DS_Store
 .claude/
+recording/
+node_modules/

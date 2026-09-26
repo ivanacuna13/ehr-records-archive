@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import { esc } from './util.js';
+import { esc, clock } from './util.js';
 
 // Guided tour: each stop flies the camera, drives the real UI (trace, open chart, scrub,
 // assemble) and plays a narrated clip. When it ends the visitor is back in free roam.
 
-const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
+const sleep = (s) => clock.sleep(s);
 
 export class Tour {
   constructor(api) {
@@ -85,6 +85,12 @@ export class Tour {
       const step = this.steps.find((s) => s.id === id);
       const fallback = Math.max(3, step.text.split(/\s+/).length / 2.6);
       this._resolveAudio = resolve;
+      if (clock.virtual) {
+        // record mode: log where each clip starts; the audio is laid in afterwards
+        (window.__recordLog = window.__recordLog || []).push({ id, t: clock.t });
+        clock.sleep(step.duration || fallback).then(resolve);
+        return;
+      }
       if (this.muted) { this._timer = setTimeout(resolve, fallback * 1000); return; }
       const a = (this.audio = new Audio(`tour/${id}.mp3`));
       a.onended = () => resolve();

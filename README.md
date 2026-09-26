@@ -19,9 +19,19 @@ Ivan Acuña's author's note lives in `site/why/why.json` (shown via the top-righ
 reading plays only when the reader presses Listen; the paragraph being read is highlighted. Re-render the audio after
 editing with `python3 tour_audio.py --why` (the optional `speak` field per paragraph controls pronunciation).
 
+## Tour video and quality
+
+The guided tour is a pre-rendered video (`site/tour/tour.mp4`, 1080p, 3:03), the same on every device. It plays over
+the live archive; closing it (or "Explore it live" at the end) returns to the interactive archive. The live view picks
+a quality level per device (resolution first, then AO, depth of field, reflections, bloom) and steps down if a machine
+can't hold ~60 fps; the data and interactions are identical at every level.
+
+Re-render the video after changing the tour: serve `site/` on :8731, then `node tools/record_tour.mjs` (needs
+`npm i puppeteer-core`, Chrome, ffmpeg). It drives the tour with a virtual clock (`?record`), so the result is frame-exact.
+
 ## Guided tour
 
-First load shows a welcome card (what it is, how it works, credit) with a 3-minute narrated tour. The tour flies
+First load shows a welcome card (what it is, how it works, credit). The tour flies
 the camera through 11 stops, driving the real UI (trace, open a chart, exploded view, diagnosis trace, reading
 wall, assembled) and hands back free roam at the end. Narration lives in `site/tour/narration.json`; the MP3s are
 rendered with the local Kokoro voice (`bm_daniel`) by `python3 tour_audio.py` (needs the daemon on :7701 + ffmpeg).

@@ -2,56 +2,67 @@
   {
     "id": "welcome",
     "title": "Welcome",
-    "text": "Welcome to the Records Archive. What you are looking at is an entire hospital's electronic health records, rebuilt as a physical place: one thousand two hundred and sixty-eight patients, five thousand six hundred visits, and nearly sixty thousand documents. None of these patients are real. The data is Synthetic Hospital, an open benchmark created by Christine Park, Valerie Chen and Tim Dettmers at Carnegie Mellon University. This is simply a model of their work, given a body."
+    "text": "Welcome to the Records Archive. What you are looking at is an entire hospital's electronic health records, rebuilt as a physical place: one thousand two hundred and sixty-eight patients, five thousand six hundred visits, and nearly sixty thousand documents. None of these patients are real. The data is Synthetic Hospital, an open benchmark created by Christine Park, Valerie Chen and Tim Dettmers at Carnegie Mellon University. This is simply a model of their work, given a body.",
+    "duration": 26.3
   },
   {
     "id": "wings",
     "title": "Wings are chapters",
-    "text": "The archive is shelved the way medicine classifies disease. Each wing is one chapter of ICD-10, the international classification of diseases: circulatory, pregnancy, the nervous system, and so on. The lit sign gives the chapter's code range and how many charts live there. A wide wing means a common condition. A nearly empty one means the opposite."
+    "text": "The archive is shelved the way medicine classifies disease. Each wing is one chapter of ICD-10, the international classification of diseases: circulatory, pregnancy, the nervous system, and so on. The lit sign gives the chapter's code range and how many charts live there. A wide wing means a common condition. A nearly empty one means the opposite.",
+    "duration": 19.01
   },
   {
     "id": "charts",
     "title": "Charts are patients",
-    "text": "Every chart is one patient, filed under their primary diagnosis. Its thickness is the number of visits, exactly as a paper chart grows. The coloured band marks the chapter, the white label is the diagnosis code, a call number, like a library book, and the small sticker records the year of the last visit."
+    "text": "Every chart is one patient, filed under their primary diagnosis. Its thickness is the number of visits, exactly as a paper chart grows. The coloured band marks the chapter, the white label is the diagnosis code, a call number, like a library book, and the small sticker records the year of the last visit.",
+    "duration": 16.73
   },
   {
     "id": "trace",
     "title": "Tracing a condition",
-    "text": "Search for any condition, and every chart that carries it lights up across the building. Here is essential hypertension: two hundred and seventy-five patients, spread across eighteen wings. Notice that more of them are filed in the endocrine wing than in circulatory. Hypertension usually rides along with something else, and this is where it rides."
+    "text": "Search for any condition, and every chart that carries it lights up across the building. Here is essential hypertension: two hundred and seventy-five patients, spread across eighteen wings. Notice that more of them are filed in the endocrine wing than in circulatory. Hypertension usually rides along with something else, and this is where it rides.",
+    "duration": 17.58
   },
   {
     "id": "open",
     "title": "Opening a chart",
-    "text": "Let's pull one off the shelf. Patient sixteen seventy-two. Thirty-two years old, eight visits, filed under peripartum cardiomyopathy: heart failure that begins around childbirth."
+    "text": "Let's pull one off the shelf. Patient sixteen seventy-two. Thirty-two years old, eight visits, filed under peripartum cardiomyopathy: heart failure that begins around childbirth.",
+    "duration": 10.28
   },
   {
     "id": "hub",
     "title": "How it is wired",
-    "text": "The chart opens into an exploded view. At the centre is the patient, her face sheet, because every record in a health system is keyed to the person. Each brass spoke binds one visit back to her. The folders fan out clockwise in date order, and above each one, that visit's pages lift out, each printed as the form it really is: lab tables, vital sign flowsheets, allergy alerts, radiology reports."
+    "text": "The chart opens into an exploded view. At the centre is the patient, her face sheet, because every record in a health system is keyed to the person. Each brass spoke binds one visit back to her. The folders fan out clockwise in date order, and above each one, that visit's pages lift out, each printed as the form it really is: lab tables, vital sign flowsheets, allergy alerts, radiology reports.",
+    "duration": 20.31
   },
   {
     "id": "rings",
     "title": "Diagnoses through time",
-    "text": "In front of her lies the master problem list. Each tab begins a ring, and each ring is one diagnosis travelling through time. A bead marks every visit where it was written down. Dashes mean it had not been diagnosed yet. Chronic conditions, you will notice, simply refuse to leave."
+    "text": "In front of her lies the master problem list. Each tab begins a ring, and each ring is one diagnosis travelling through time. A bead marks every visit where it was written down. Dashes mean it had not been diagnosed yet. Chronic conditions, you will notice, simply refuse to leave.",
+    "duration": 14.98
   },
   {
     "id": "evidence",
     "title": "Following the evidence",
-    "text": "Pick a diagnosis, and I will trace it. The pulse runs along its ring to every visit that documented it, then climbs the threads to the exact lines of evidence: each finding, highlighted on the page it came from. Everything unrelated steps back into the dark."
+    "text": "Pick a diagnosis, and I will trace it. The pulse runs along its ring to every visit that documented it, then climbs the threads to the exact lines of evidence: each finding, highlighted on the page it came from. Everything unrelated steps back into the dark.",
+    "duration": 14.25
   },
   {
     "id": "reading",
     "title": "Reading a visit",
-    "text": "Scrub the timeline to any visit, and its pages rise into a reading wall. Yellow marks a finding that was present. Blue marks one the clinician checked and ruled out. The small tags in the margins are the SNOMED and LOINC codes that make the record machine readable. Click any page, and the full document opens beside you."
+    "text": "Scrub the timeline to any visit, and its pages rise into a reading wall. Yellow marks a finding that was present. Blue marks one the clinician checked and ruled out. The small tags in the margins are the SNOMED and LOINC codes that make the record machine readable. Click any page, and the full document opens beside you.",
+    "duration": 16.66
   },
   {
     "id": "assembled",
     "title": "Assembled",
-    "text": "Switch to assembled, and it is a closed paper chart again. Eight folders thick, one for every visit."
+    "text": "Switch to assembled, and it is a closed paper chart again. Eight folders thick, one for every visit.",
+    "duration": 5.61
   },
   {
     "id": "closing",
     "title": "Your turn",
-    "text": "And back to the shelf it goes. Everything you have seen is real structure from the data. Nothing decorative is pretending to be a record. The archive is yours now: drag to look around, search for a condition, or open any chart. Enjoy."
+    "text": "And back to the shelf it goes. Everything you have seen is real structure from the data. Nothing decorative is pretending to be a record. The archive is yours now: drag to look around, search for a condition, or open any chart. Enjoy.",
+    "duration": 12.5
   }
 ]

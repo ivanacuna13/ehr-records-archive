@@ -40,7 +40,7 @@
     <div id="readout" class="readout"></div>
     <div id="filterdesc" class="filterdesc"></div>
     <div class="credit">A model of <a href="https://github.com/sparkcpark/synthetic_hospital" target="_blank" rel="noopener">Synthetic Hospital</a> by Christine Park, Valerie Chen &amp; Tim Dettmers · Carnegie Mellon University</div>
-    <button id="abouttour" class="btn small tourbtn"><svg viewBox="0 0 24 24" class="ico"><path d="M8 5l11 7-11 7z" /></svg>Guided tour</button>
+    <button id="abouttour" class="btn small tourbtn"><svg viewBox="0 0 24 24" class="ico"><path d="M8 5l11 7-11 7z" /></svg>Watch the tour</button>
   </header>
 
   <div id="searchwrap">
@@ -97,9 +97,9 @@
       </ul>
       <p class="credit big">This visualization is a model built on <a href="https://github.com/sparkcpark/synthetic_hospital" target="_blank" rel="noopener">Synthetic Hospital</a>, an open, physician-validated EHR benchmark by <b>Christine Park, Valerie Chen and Tim Dettmers</b> at Carnegie Mellon University. Every patient is synthetic.</p>
       <div class="actions">
-        <button id="starttour" class="btn primary"><svg viewBox="0 0 24 24" class="ico"><path d="M8 5l11 7-11 7z" /></svg>Take the guided tour <span>3 min · narrated</span></button>
+        <button id="watchtour" class="btn primary"><svg viewBox="0 0 24 24" class="ico"><path d="M8 5l11 7-11 7z" /></svg>Watch the guided tour <span>3 min · narrated</span></button>
+        <button id="introwhy" class="btn"><svg viewBox="0 0 24 24" class="ico line"><path d="M4 5h11a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3z" /><path d="M8 9h6M8 13h6" /></svg>Why I built this</button>
         <button id="explore" class="btn">Explore on my own</button>
-        <button id="introwhy" class="btn ghostbtn">Why I built this</button>
       </div>
     </div>
   </div>
@@ -119,6 +119,20 @@
       </div>
       <div id="whybody"></div>
     </article>
+  </div>
+
+  <!-- the tour as a pre-rendered video (same for every device) -->
+  <div id="vid" class="hidden">
+    <div class="vwrap">
+      <video id="tourvid" controls playsinline preload="none" poster="tour/poster.jpg"></video>
+      <div id="vend" class="hidden">
+        <div class="eyebrow">End of tour</div>
+        <h3>Everything you just watched is live behind this window.</h3>
+        <div class="actions"><button id="vlive" class="btn primary">Explore it live</button><button id="vreplay" class="btn">Replay</button></div>
+      </div>
+    </div>
+    <button id="vclose" class="x" title="Close">×</button>
+    <div class="vnote">Recorded in the live archive. Close to explore it yourself.</div>
   </div>
 
   <!-- guided tour captions -->

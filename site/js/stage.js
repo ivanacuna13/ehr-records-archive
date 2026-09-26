@@ -189,25 +189,70 @@ export class Stage {
     this.reflRT.setSize(Math.max(2, Math.floor(w * this.dpr * this.reflScale)), Math.max(2, Math.floor(h * this.dpr * this.reflScale)));
   }
 
-  /** Adaptive resolution: keep ~60fps by trading pixel ratio, never the scene. Hysteresis keeps
-   *  it from oscillating (every resize costs a hitch): after a downshift it will not climb back
-   *  for a while, and it only climbs when frames are comfortably fast. */
+  /**
+   * Adaptive quality ladder. Every rung keeps the full scene and data; slower machines first
+   * give up resolution, then the expensive finish (AO, depth of field, reflections, bloom).
+   * Hysteresis: after a downshift it will not climb back for 20 s (every change costs a hitch).
+   */
+  _ladder() {
+    const m = this.maxDpr;
+    return [
+      { dpr: m, tier: 0 }, { dpr: Math.min(m, 1.25), tier: 0 }, { dpr: Math.min(m, 1.25), tier: 1 },
+      { dpr: Math.min(m, 1.0), tier: 1 }, { dpr: Math.min(m, 1.0), tier: 2 }, { dpr: Math.min(m, 1.0), tier: 3 },
+      { dpr: Math.min(m, 0.75), tier: 3 },
+    ];
+  }
+
+  /** Initial rung from what the device reports, so weak machines don't start by stuttering. */
+  guessRung() {
+    let gpu = '';
+    try {
+      const gl = this.renderer.getContext();
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      gpu = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : '';
+    } catch { /* ignore */ }
+    const mobile = /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && innerWidth < 1100);
+    const cores = navigator.hardwareConcurrency || 8;
+    this.gpu = gpu;
+    if (/swiftshader|llvmpipe|software|basic render/i.test(gpu)) { this.maxDpr = Math.min(this.maxDpr, 0.75); return 6; }
+    if (mobile) return 4;
+    if (/intel/i.test(gpu) && !/iris xe|arc/i.test(gpu)) return 3;
+    if (/intel/i.test(gpu) || cores <= 4) return 2;
+    return 0;
+  }
+
+  setRung(i) {
+    const L = this._ladder();
+    this.rung = Math.max(0, Math.min(L.length - 1, i));
+    const { dpr, tier } = L[this.rung];
+    this.tier = tier;
+    this.gtao.enabled = tier < 1;
+    this.bokeh.enabled = tier < 2;
+    this._noRefl = tier >= 3;
+    this.reflUniforms.uReflStrength.value = tier >= 3 ? 0 : 0.17;
+    this.bloom.enabled = tier < 3;
+    if (dpr !== this.dpr) { this.dpr = dpr; this.resize(); }
+    document.documentElement.dataset.quality = String(this.rung);
+  }
+
   _quality(dt) {
-    if (this.hold) { this.frameTimes.length = 0; return; }
+    if (this.hold || this.fixedQuality) { this.frameTimes.length = 0; return; }
+    if (this.rung == null) this.setRung(0);
     this.frameTimes.push(dt);
     if (this.frameTimes.length > 60) this.frameTimes.shift();
     this.qualityCooldown -= dt;
     this.noUpshift = Math.max(0, (this.noUpshift || 0) - dt);
     if (this.qualityCooldown > 0 || this.frameTimes.length < 60) return;
-    const sorted = [...this.frameTimes].sort((a, b) => a - b);
-    const med = sorted[30];
     const mean = this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length;
-    let next = this.dpr;
-    if (mean > 1 / 56 && this.dpr > 0.8) { next = Math.max(0.8, this.dpr - 0.2); this.noUpshift = 20; }
-    else if (mean < 1 / 59 && this.dpr < this.maxDpr && this.noUpshift === 0) next = Math.min(this.maxDpr, this.dpr + 0.1);
-    if (next !== this.dpr) {
-      this.dpr = next;
-      this.resize();
+    const L = this._ladder();
+    let next = this.rung;
+    if (mean > 1 / 56 && this.rung < L.length - 1) {
+      next = this.rung + 1; this.noUpshift = 20;
+      // an upshift that immediately failed marks this machine's ceiling: stop probing above it
+      if (this.lastUp != null && performance.now() - this.lastUp < 6000) this.floorRung = next;
+    } else if (mean < 1 / 59 && this.rung > (this.floorRung || 0) && this.noUpshift === 0) { next = this.rung - 1; this.lastUp = performance.now(); }
+    if (next !== this.rung) {
+      this.setRung(next);
       this.qualityCooldown = 1.5;
       this.frameTimes.length = 0;
     }
