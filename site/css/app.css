@@ -199,11 +199,3 @@ select { background: rgba(255,255,255,0.05); color: var(--ink); border: 1px soli
 
 body.lv2 #hint { bottom: 96px; }
 
-/* password gate */
-#gate { position: fixed; inset: 0; display: grid; place-items: center; background: var(--bg); z-index: 60; transition: opacity .8s ease; }
-#gate.done { opacity: 0; pointer-events: none; }
-#gate input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; color: var(--ink); font: 14px var(--sans); outline: 0; margin-bottom: 10px; }
-#gate input:focus { border-color: rgba(207,168,101,0.5); }
-#gate .btn { width: 100%; justify-content: center; padding: 10px; }
-#gate.bad input { border-color: rgba(255,110,100,0.6); animation: shake .35s; }
-@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }

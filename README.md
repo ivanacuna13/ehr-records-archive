@@ -4,7 +4,7 @@ Static site: `site/index.html` + generated JSON. Three.js r170 and fonts load fr
 
 Data: derived from [sparkcpark/synthetic_hospital](https://github.com/sparkcpark/synthetic_hospital) (MIT License, © 2026 sparkcpark) — fully synthetic, no real patients.
 
-The hosted page has a password screen. It is cosmetic: the JSON under `site/data/` is public in this repo.
+Live: https://ivanacuna13.github.io/ehr-records-archive/
 
 ```
 .venv/bin/python build.py                               # regenerate site/data from synthetic_hospital/

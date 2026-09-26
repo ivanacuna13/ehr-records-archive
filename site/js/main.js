@@ -671,32 +671,7 @@ async function step(seconds, fps = 30) {
 }
 hint();
 requestAnimationFrame(frame);
-// Cosmetic password gate: compares a SHA-256 hash; the data itself is public in the repo.
-const GATE_HASH = 'b2c84b02474e70aca96cb5fa0fa4147825f91b6841ee1c86b79a3bc0582797cd';
-async function sha256(t) {
-  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
-  return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, '0')).join('');
-}
-function unlocked() { try { return sessionStorage.getItem('archive-unlocked') === GATE_HASH; } catch { return false; } }
-function gate() {
-  const form = $('#gate');
-  if (unlocked()) { form.classList.add('done'); return Promise.resolve(); }
-  $('#pw').focus();
-  return new Promise((resolve) => {
-    form.onsubmit = async (ev) => {
-      ev.preventDefault();
-      if ((await sha256($('#pw').value)) === GATE_HASH) {
-        try { sessionStorage.setItem('archive-unlocked', GATE_HASH); } catch {}
-        form.classList.add('done');
-        resolve();
-      } else {
-        form.classList.remove('bad'); void form.offsetWidth; form.classList.add('bad');
-        $('#pwnote').textContent = 'Incorrect password.';
-      }
-    };
-  });
-}
-gate().then(boot).catch((e) => { console.error(e); $('#loadnote').textContent = 'Failed to load: ' + e.message; });
+boot().catch((e) => { console.error(e); $('#loadnote').textContent = 'Failed to load: ' + e.message; });
 
 // debug hooks for automated screenshots
 window.__app = {
