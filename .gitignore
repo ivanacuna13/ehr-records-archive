@@ -1,0 +1,5 @@
+synthetic_hospital/
+.venv/
+__pycache__/
+.DS_Store
+.claude/

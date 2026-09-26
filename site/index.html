@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Records Archive</title>
+  <meta name="description" content="An exploded view of a synthetic hospital's electronic health records: the hospital as a records archive, each patient as an opened chart." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect x=%226%22 y=%224%22 width=%2220%22 height=%2224%22 rx=%222%22 fill=%22%23d6bb82%22/%3E%3Crect x=%226%22 y=%228%22 width=%2220%22 height=%224%22 fill=%22%23c0503f%22/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="vignette"></div>
+
+  <!-- password gate (cosmetic: the data files are public in the repo) -->
+  <form id="gate">
+    <div class="loader-inner">
+      <div class="eyebrow">Synthetic Hospital</div>
+      <div class="loader-title">Records Archive</div>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="Password" aria-label="Password" />
+      <button type="submit" class="btn">Enter</button>
+      <div class="loader-note" id="pwnote">This preview is password protected.</div>
+    </div>
+  </form>
+
+  <!-- loading -->
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="eyebrow">Synthetic Hospital</div>
+      <div class="loader-title">Records Archive</div>
+      <div class="bar"><i id="loadbar"></i></div>
+      <div class="loader-note" id="loadnote">Opening the stacks…</div>
+    </div>
+  </div>
+
+  <!-- level 1 -->
+  <header id="brand" class="glass">
+    <div class="eyebrow">Synthetic Hospital · EHR</div>
+    <h1>Records Archive</h1>
+    <div id="readout" class="readout"></div>
+    <div id="filterdesc" class="filterdesc"></div>
+  </header>
+
+  <div id="searchwrap">
+    <div id="search" class="glass">
+      <svg viewBox="0 0 24 24" class="ico"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
+      <input id="q" type="text" autocomplete="off" spellcheck="false" placeholder="Search a diagnosis, ICD-10 code, wing or patient ID" />
+      <button id="clear" class="ghost" title="Clear filters">Clear</button>
+    </div>
+    <div id="suggest" class="glass hidden"></div>
+    <div id="filters" class="glass">
+      <div class="seg" id="sex">
+        <button data-v="all" class="on">All</button><button data-v="F">F</button><button data-v="M">M</button>
+      </div>
+      <div class="agebox">
+        <span>Age</span>
+        <div class="range" id="agerange">
+          <input type="range" id="amin" min="0" max="100" value="0" />
+          <input type="range" id="amax" min="0" max="100" value="100" />
+          <i id="afill"></i>
+        </div>
+        <span id="agelbl" class="mono">0–100</span>
+      </div>
+      <select id="wing"><option value="">All wings</option></select>
+    </div>
+  </div>
+
+  <div id="tracebar" class="glass hidden"></div>
+  <div id="badges"></div>
+
+  <!-- level 2 -->
+  <div id="patientbar" class="glass hidden">
+    <button id="back" class="btn"><svg viewBox="0 0 24 24" class="ico"><path d="M14 6l-6 6 6 6" /></svg>Archive</button>
+    <div class="ptitle"><div class="eyebrow" id="pwing"></div><div id="pname"></div></div>
+    <div class="seg" id="mode"><button data-v="assembled">Assembled</button><button data-v="exploded" class="on">Exploded</button></div>
+  </div>
+  <div id="ptrace" class="glass hidden"></div>
+  <div id="scrubber" class="glass hidden">
+    <button id="overview" class="btn small">Overview</button>
+    <div id="track"><div id="ticks"></div><div id="visits"></div></div>
+    <div id="visitlbl" class="mono"></div>
+  </div>
+  <aside id="panel" class="glass"><button id="pclose" class="x" title="Close">×</button><div id="pbody"></div></aside>
+
+  <!-- shared -->
+  <div id="tip" class="hidden"></div>
+  <div id="legend" class="glass collapsed">
+    <button id="legendtoggle"><span>Legend</span><em>how the shapes map to the record</em></button>
+    <div id="legendbody"></div>
+  </div>
+  <div id="hint" class="mono"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
