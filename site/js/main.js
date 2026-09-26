@@ -700,6 +700,57 @@ $('#explore').onclick = closeIntro;
 $('#abouttour').onclick = () => { $('#intro').classList.remove('hidden'); };
 $('#intro').addEventListener('click', (e) => { if (e.target.id === 'intro') closeIntro(); });
 
+// "Why I built this" — Ivan Acuña's note. Audio only plays when the reader presses Listen.
+const whyAudio = new Audio();
+whyAudio.preload = 'none';
+let whyDoc = null;
+const fmtT = (t) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+async function openWhy() {
+  if (!whyDoc) {
+    whyDoc = await fetch('why/why.json').then((r) => r.json());
+    $('#whytitle').textContent = whyDoc.title;
+    $('#whyauthor').textContent = whyDoc.author;
+    $('#whybody').innerHTML = whyDoc.paragraphs.map((p, i) => `<p data-i="${i}">${esc(p.text)}</p>`).join('');
+    $('#whybody').querySelectorAll('p').forEach((el) => (el.onclick = () => {
+      const st = whyDoc.paragraphs[+el.dataset.i].start;
+      if (st == null) return;
+      if (!whyAudio.src) whyAudio.src = 'why/why-i-built-this.mp3';
+      whyAudio.currentTime = st; whyAudio.play();
+    }));
+  }
+  $('#why').classList.remove('hidden');
+}
+function closeWhy() { whyAudio.pause(); $('#why').classList.add('hidden'); }
+$('#whyplay').onclick = () => {
+  if (!whyAudio.src) whyAudio.src = 'why/why-i-built-this.mp3';
+  whyAudio.paused ? whyAudio.play() : whyAudio.pause();
+};
+whyAudio.onplay = () => { $('#whyplay path').setAttribute('d', 'M7 5h3.5v14H7zM13.5 5H17v14h-3.5z'); $('#whyplay span').textContent = 'Pause'; $('#whybody').classList.add('playing'); };
+whyAudio.onpause = () => { $('#whyplay path').setAttribute('d', 'M8 5l11 7-11 7z'); $('#whyplay span').textContent = whyAudio.currentTime > 0.5 && !whyAudio.ended ? 'Resume' : 'Listen'; $('#whybody').classList.remove('playing'); };
+whyAudio.onended = () => { whyAudio.currentTime = 0; };
+whyAudio.ontimeupdate = () => {
+  const t = whyAudio.currentTime, d = whyAudio.duration || 1;
+  $('#whyprog').style.width = `${(t / d) * 100}%`;
+  $('#whytime').textContent = `${fmtT(t)} / ${fmtT(whyAudio.duration || 0)}`;
+  if (!whyDoc) return;
+  let cur = -1;
+  whyDoc.paragraphs.forEach((p, i) => { if (p.start != null && t >= p.start - 0.1) cur = i; });
+  $('#whybody').querySelectorAll('p').forEach((el, i) => el.classList.toggle('on', i === cur));
+  const on = $('#whybody p.on');
+  if (on && !whyAudio.paused && on !== openWhy._last) { openWhy._last = on; on.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+};
+document.querySelector('#why .bar').onclick = (e) => {
+  if (!whyAudio.src) whyAudio.src = 'why/why-i-built-this.mp3';
+  const r = e.currentTarget.getBoundingClientRect();
+  const go = () => { whyAudio.currentTime = ((e.clientX - r.left) / r.width) * whyAudio.duration; };
+  if (isNaN(whyAudio.duration)) { whyAudio.addEventListener('loadedmetadata', go, { once: true }); whyAudio.load(); } else go();
+};
+$('#whybtn').onclick = openWhy;
+$('#introwhy').onclick = () => { closeIntro(); openWhy(); };
+$('#whyclose').onclick = closeWhy;
+$('#why').addEventListener('click', (e) => { if (e.target.id === 'why') closeWhy(); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#why').classList.contains('hidden')) closeWhy(); });
+
 boot().catch((e) => { console.error(e); $('#loadnote').textContent = 'Failed to load: ' + e.message; });
 
 // debug hooks for automated screenshots

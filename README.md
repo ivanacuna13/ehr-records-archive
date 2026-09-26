@@ -13,6 +13,12 @@ EHR benchmark by **Christine Park, Valerie Chen and Tim Dettmers** (Carnegie Mel
 [sparkcpark/synthetic_hospital](https://github.com/sparkcpark/synthetic_hospital), MIT License. Every patient is
 synthetic. The credit also appears on the welcome card and in the archive's header panel.
 
+## Why I built this
+
+Ivan Acuña's author's note lives in `site/why/why.json` (shown via the top-right button and the welcome card). The narrated
+reading plays only when the reader presses Listen; the paragraph being read is highlighted. Re-render the audio after
+editing with `python3 tour_audio.py --why` (the optional `speak` field per paragraph controls pronunciation).
+
 ## Guided tour
 
 First load shows a welcome card (what it is, how it works, credit) with a 3-minute narrated tour. The tour flies

@@ -1,0 +1,71 @@
+{
+  "title": "Why I built this",
+  "author": "Ivan Acuña",
+  "intro_speak": "Why I built this. By Ivan Acuña.",
+  "paragraphs": [
+    {
+      "text": "My biggest constraint with AI is me turning what I can see in my head into words, and then hoping they're the right words. The ones that turn into the right lines of code.",
+      "start": 3.07
+    },
+    {
+      "text": "I used to always be the guy that didn't care about semantics, but now they are literally everything when it comes to working with and prompting AI.",
+      "start": 12.86
+    },
+    {
+      "text": "Most of the time what I actually know is “I'll know it when I see it.” I learned the real word for this is ‘tacit knowledge’.",
+      "start": 21.3
+    },
+    {
+      "text": "The problem with this is that every new domain, whether that's robotics, medicine or data, makes me learn a whole new vocabulary before I can be of any use.",
+      "start": 28.08
+    },
+    {
+      "text": "I can't ask the right questions, ask for things, or even articulate my ideas. I feel like a baby.",
+      "start": 37.36
+    },
+    {
+      "text": "Only after I learn a PhD level of vocabulary will the AI give me what I'm picturing. Even in fields where I'd call myself somewhat of an expert. I'm not an expert because I know every word for every thing. But the words are what you have to hand to the machine.",
+      "speak": "Only after I learn a P H D level of vocabulary will the AI give me what I'm picturing. Even in fields where I'd call myself somewhat of an expert. I'm not an expert because I know every word for every thing. But the words are what you have to hand to the machine.",
+      "start": 43.99
+    },
+    {
+      "text": "Humans aren't built for walls of text. At least I'm not. We're built for space and movement. Athletes, anyone who uses their body, we understand shape before we understand sentences. When you go to a foreign country and can't speak their language, you begin using your body to play charades and communicate.",
+      "start": 59.11
+    },
+    {
+      "text": "I survived a few weeks in Portugal doing just that.",
+      "start": 75.32
+    },
+    {
+      "text": "Think about something as simple as making a peace sign. You don't need to read the firing pattern of every neuron in your arm to know it's wrong. You just look and see you used the wrong fingers. Then someone says “lift your pointer and middle, hold the other two down with your thumb,” and it's fixed. The neurons still fire. You just don't have to know which ones.",
+      "start": 78.98
+    },
+    {
+      "text": "So this archive is a test of that idea. Data has to be structured in a uniform, repeatable way for anything to work. As I've learned, that's what schemas and data models are. If the structure is real, it can have a real shape.",
+      "start": 96.15
+    },
+    {
+      "text": "Here, a hospital's records become a library: chapters are wings, patients are charts, visits are folders, diagnoses are rings running through time. Nothing is vain decoration and every shape comes strictly from the data.",
+      "start": 109.59
+    },
+    {
+      "text": "What I've realized is when the shape is an accurate metaphor for the data under the hood, you can diagnose by simply looking. Even messy data is worth visualizing. In this example, if the papers are everywhere but you can see how they relate, you can clean it up, the same way you clean your room. A messy system could be rebuilt against a clean blueprint like this one, with the uncertain pieces lighting up for a human to check.",
+      "start": 122.66
+    },
+    {
+      "text": "Where my brain takes this is agents and automation. Point it at a repo or a workflow, run it, and watch the agent move through the structure instead of reading its endless logs of code. When something breaks, you'd see where. Your “test logs” could be simple 20-second videos of the shapes moving, and you'd understand it immediately. Then you'd say “connect this piece to that one” or “move this over there” or “when this red thing moves here, the green one should also move there” and let the computer translate the movement back into code.",
+      "speak": "Where my brain takes this is agents and automation. Point it at a repo or a workflow, run it, and watch the agent move through the structure instead of reading its endless logs of code. When something breaks, you'd see where. Your test logs could be simple twenty second videos of the shapes moving, and you'd understand it immediately. Then you'd say, connect this piece to that one. Or, move this over there. Or, when this red thing moves here, the green one should also move there. And let the computer translate the movement back into code.",
+      "start": 144.59
+    },
+    {
+      "text": "This first version is built on Synthetic Hospital, an open, fully synthetic EHR benchmark by Christine Park, Valerie Chen and Tim Dettmers at Carnegie Mellon. In this version, the automation would show the shapes moving, and I would easily be able to see how, where, and when it breaks.",
+      "speak": "This first version is built on Synthetic Hospital, an open, fully synthetic E H R benchmark by Christine Park, Valerie Chen and Tim Dettmers at Carnegie Mellon. In this version, the automation would show the shapes moving, and I would easily be able to see how, where, and when it breaks.",
+      "start": 172.89
+    },
+    {
+      "text": "This helps me see and UNDERSTAND the data, and it helps me think. I hope it does the same for you.",
+      "speak": "This helps me see, and understand, the data. And it helps me think. I hope it does the same for you.",
+      "start": 189.22
+    }
+  ]
+}

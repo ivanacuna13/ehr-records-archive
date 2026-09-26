@@ -232,3 +232,24 @@ body.lv2 #hint { bottom: 96px; }
 #tourbar .tctl { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
 body.touring #searchwrap, body.touring #patientbar, body.touring #scrubber, body.touring #tracebar, body.touring #ptrace, body.touring #panel, body.touring #brand .tourbtn { pointer-events: none; }
 body.touring #hint { opacity: 0; }
+
+/* why I built this */
+.btn.ghostbtn { background: none; color: var(--muted); }
+.btn.ghostbtn:hover { color: var(--ink); background: rgba(255,255,255,0.06); }
+#whybtn { position: fixed; top: 20px; right: 20px; z-index: 6; padding: 10px 14px; font: 500 12.5px var(--sans); color: var(--ink); cursor: pointer; }
+#whybtn:hover { background: rgba(30,31,35,0.7); }
+body.lv2 #whybtn, body.touring #whybtn { opacity: 0; pointer-events: none; }
+#why { position: fixed; inset: 0; z-index: 45; display: grid; place-items: center; background: rgba(6,7,8,0.6); transition: opacity .6s ease; }
+#why .card { position: relative; width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 60px); overflow: auto; padding: 28px 32px 30px; background: var(--glass-strong); }
+#why .x { position: absolute; top: 14px; right: 14px; }
+#why h2 { font-size: 30px; font-weight: 300; margin: 6px 0 2px; letter-spacing: -0.01em; }
+#why .byline { color: var(--brass); font-size: 13px; margin-bottom: 16px; }
+#why .player { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; position: sticky; top: -28px; padding: 10px 0; background: linear-gradient(180deg, rgba(18,19,22,0.95) 70%, rgba(18,19,22,0)); z-index: 1; }
+#why .player .btn.primary .ico { fill: currentColor; stroke: none; }
+#why .player .bar { flex: 1; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; cursor: pointer; }
+#why .player .bar i { display: block; height: 100%; width: 0; background: var(--brass); }
+#whytime { font-size: 11.5px; color: var(--muted); min-width: 78px; text-align: right; }
+#whybody p { font-size: 15px; line-height: 1.65; color: #cfc9be; margin: 0 0 14px; transition: color .5s ease, opacity .5s ease; cursor: pointer; }
+#whybody.playing p { opacity: .45; }
+#whybody.playing p.on { opacity: 1; color: var(--ink); }
+@media (max-width: 900px) { #whybtn { top: auto; bottom: 64px; right: 12px; } }
