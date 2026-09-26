@@ -6,6 +6,21 @@ Data: derived from [sparkcpark/synthetic_hospital](https://github.com/sparkcpark
 
 Live: https://ivanacuna13.github.io/ehr-records-archive/
 
+## Credit
+
+This visualization is a model built on **Synthetic Hospital** (v1.3), an open, physician-validated longitudinal
+EHR benchmark by **Christine Park, Valerie Chen and Tim Dettmers** (Carnegie Mellon University) —
+[sparkcpark/synthetic_hospital](https://github.com/sparkcpark/synthetic_hospital), MIT License. Every patient is
+synthetic. The credit also appears on the welcome card and in the archive's header panel.
+
+## Guided tour
+
+First load shows a welcome card (what it is, how it works, credit) with a 3-minute narrated tour. The tour flies
+the camera through 11 stops, driving the real UI (trace, open a chart, exploded view, diagnosis trace, reading
+wall, assembled) and hands back free roam at the end. Narration lives in `site/tour/narration.json`; the MP3s are
+rendered with the local Kokoro voice (`bm_daniel`) by `python3 tour_audio.py` (needs the daemon on :7701 + ffmpeg).
+Pause / mute / next / end-tour controls; Esc ends it.
+
 ```
 .venv/bin/python build.py                               # regenerate site/data from synthetic_hospital/
 python3 -m http.server 8731 --directory site            # then open http://localhost:8731

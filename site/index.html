@@ -39,6 +39,8 @@
     <h1>Records Archive</h1>
     <div id="readout" class="readout"></div>
     <div id="filterdesc" class="filterdesc"></div>
+    <div class="credit">A model of <a href="https://github.com/sparkcpark/synthetic_hospital" target="_blank" rel="noopener">Synthetic Hospital</a> by Christine Park, Valerie Chen &amp; Tim Dettmers · Carnegie Mellon University</div>
+    <button id="abouttour" class="btn small tourbtn"><svg viewBox="0 0 24 24" class="ico"><path d="M8 5l11 7-11 7z" /></svg>Guided tour</button>
   </header>
 
   <div id="searchwrap">
@@ -81,6 +83,32 @@
     <div id="visitlbl" class="mono"></div>
   </div>
   <aside id="panel" class="glass"><button id="pclose" class="x" title="Close">×</button><div id="pbody"></div></aside>
+
+  <!-- welcome -->
+  <div id="intro" class="hidden">
+    <div class="card glass">
+      <div class="eyebrow">Synthetic Hospital · Electronic Health Records</div>
+      <h2>Records Archive</h2>
+      <p class="lede">An entire hospital's health records, rebuilt as a physical place you can walk through: 1,268 patients, 5,602 visits, 59,964 documents.</p>
+      <ul class="how">
+        <li><b>The hospital is a library.</b> Each wing is an ICD-10 chapter of disease. Each chart is one patient, filed by primary diagnosis, as thick as their number of visits.</li>
+        <li><b>Open a chart and it explodes.</b> The patient sits at the centre; every visit is a dated folder bound to them by a brass spoke, and its pages lift out as the real forms they are.</li>
+        <li><b>Diagnoses become rings through time.</b> Findings are highlighted on the exact line they came from and threaded to the diagnosis they support. Trace one and the evidence lights up.</li>
+      </ul>
+      <p class="credit big">This visualization is a model built on <a href="https://github.com/sparkcpark/synthetic_hospital" target="_blank" rel="noopener">Synthetic Hospital</a>, an open, physician-validated EHR benchmark by <b>Christine Park, Valerie Chen and Tim Dettmers</b> at Carnegie Mellon University. Every patient is synthetic.</p>
+      <div class="actions">
+        <button id="starttour" class="btn primary"><svg viewBox="0 0 24 24" class="ico"><path d="M8 5l11 7-11 7z" /></svg>Take the guided tour <span>3 min · narrated</span></button>
+        <button id="explore" class="btn">Explore on my own</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- guided tour captions -->
+  <div id="tourbar" class="glass hidden">
+    <div class="trow"><span id="tstep" class="mono"></span><span id="ttitle"></span><div id="tdots"></div></div>
+    <div id="ttext"></div>
+    <div class="tctl"><button id="tpause" class="btn small">Pause</button><button id="tmute" class="btn small">Sound on</button><button id="tnext" class="btn small">Next</button><button id="texit" class="btn small">End tour</button></div>
+  </div>
 
   <!-- shared -->
   <div id="tip" class="hidden"></div>

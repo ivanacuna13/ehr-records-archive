@@ -199,3 +199,36 @@ select { background: rgba(255,255,255,0.05); color: var(--ink); border: 1px soli
 
 body.lv2 #hint { bottom: 96px; }
 
+
+/* credit + welcome + tour */
+.credit { margin-top: 10px; font-size: 11px; color: var(--faint); line-height: 1.45; }
+.credit a, #intro a { color: var(--brass); text-decoration: none; border-bottom: 1px solid rgba(207,168,101,0.35); }
+.tourbtn { margin-top: 10px; }
+#intro { position: fixed; inset: 0; display: grid; place-items: center; z-index: 40; background: radial-gradient(ellipse at center, rgba(6,7,8,0.35), rgba(6,7,8,0.75)); transition: opacity .7s ease; }
+#intro .card { width: min(560px, calc(100vw - 32px)); padding: 26px 28px 22px; background: var(--glass-strong); }
+#intro h2 { font-size: 30px; font-weight: 300; margin: 6px 0 10px; letter-spacing: -0.01em; }
+#intro .lede { color: #d8d2c6; font-size: 14.5px; line-height: 1.55; margin: 0 0 14px; }
+#intro .how { margin: 0 0 14px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+#intro .how li { font-size: 13px; line-height: 1.5; color: #c9c3b8; padding-left: 14px; position: relative; }
+#intro .how li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 1px; background: var(--brass); }
+#intro .how b { color: var(--ink); font-weight: 600; }
+#intro .credit.big { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+#intro .actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.btn.primary { background: linear-gradient(180deg, #d9b673, #b8914d); color: #1a140b; font-weight: 600; padding: 10px 14px 10px 11px; }
+.btn.primary:hover { background: linear-gradient(180deg, #e4c282, #c29a55); }
+.btn.primary span { font-weight: 500; opacity: .7; font-size: 11.5px; margin-left: 4px; }
+.btn.primary .ico { fill: currentColor; stroke: none; }
+.tourbtn .ico { fill: currentColor; stroke: none; width: 12px; height: 12px; }
+#tourbar { position: fixed; left: 50%; bottom: 92px; transform: translateX(-50%); width: min(720px, calc(100vw - 32px)); padding: 14px 18px 12px; z-index: 30; }
+#tourbar.hidden { transform: translate(-50%, 8px); }
+#tourbar .trow { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+#tstep { font-size: 11px; color: var(--brass); }
+#ttitle { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+#tdots { margin-left: auto; display: flex; gap: 4px; }
+#tdots i { width: 14px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.12); }
+#tdots i.done { background: rgba(207,168,101,0.55); }
+#tdots i.on { background: var(--brass); }
+#ttext { font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+#tourbar .tctl { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+body.touring #searchwrap, body.touring #patientbar, body.touring #scrubber, body.touring #tracebar, body.touring #ptrace, body.touring #panel, body.touring #brand .tourbtn { pointer-events: none; }
+body.touring #hint { opacity: 0; }

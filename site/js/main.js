@@ -5,12 +5,13 @@ import { PatientChart, Y0 } from './patient.js';
 import { stoneFloor } from './textures.js';
 import { tweens, easeInOutCubic, easeInOutQuint, fmtDate, fmtInt, esc, chapterCss, problemColor, SECTION_LABEL, FINDING_LABEL, dateNum, damp } from './util.js';
 import * as UI from './ui.js';
+import { Tour } from './tour.js';
 
 const $ = UI.$;
 const stage = new Stage($('#stage'));
 const { camera, controls, scene } = stage;
 let H, archive, chart = null, openIdx = -1, prevPose = null;
-let level = 'boot', busy = false, time = 0;
+let level = 'boot', busy = false, time = 0, touring = false;
 const filt = { q: '', sex: 'all', amin: 0, amax: 100, wing: '', trace: null };
 let match = null, traceSet = null;
 
@@ -33,7 +34,7 @@ function flyTo(pose, dur = 2, arc = 0.12) {
       camera.position.y += Math.sin(k * Math.PI) * lift;
       controls.target.lerpVectors(t0, t1, k);
     },
-    complete: () => { if (tok === flyTok) controls.enabled = true; },
+    complete: () => { if (tok === flyTok) controls.enabled = !touring; },
   });
 }
 
@@ -114,8 +115,9 @@ async function boot() {
   $('#loader').classList.add('done');
   level = 'hospital';
   UI.legendLevel(1);
-  await flyTo(hospitalPose(), 3.6, 0.02);
   applyControlLimits();
+  setTimeout(() => $('#intro').classList.remove('hidden'), 900);
+  await flyTo(hospitalPose(), 3.6, 0.02);
 }
 
 function applyControlLimits() {
@@ -311,6 +313,7 @@ const mouse = new THREE.Vector2(-9, -9);
 let mouseMoved = false, downAt = null, hoverI = -1, hoverPick = null, clientXY = [0, 0];
 const canvas = stage.renderer.domElement;
 canvas.addEventListener('pointermove', (e) => {
+  if (touring) return;
   mouse.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
   clientXY = [e.clientX, e.clientY];
   mouseMoved = true;
@@ -318,7 +321,7 @@ canvas.addEventListener('pointermove', (e) => {
 canvas.addEventListener('pointerleave', () => { mouse.set(-9, -9); mouseMoved = true; });
 canvas.addEventListener('pointerdown', (e) => { downAt = [e.clientX, e.clientY]; });
 canvas.addEventListener('pointerup', (e) => {
-  if (!downAt) return;
+  if (!downAt || touring) return;
   const moved = Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]);
   downAt = null;
   if (moved > 5 || busy) return;
@@ -328,7 +331,7 @@ canvas.addEventListener('pointerup', (e) => {
   else if (level === 'patient') onPatientClick(e);
 });
 canvas.addEventListener('dblclick', () => {
-  if (level !== 'patient' || !hoverPick) return;
+  if (touring || level !== 'patient' || !hoverPick) return;
   if (hoverPick.kind === 'sheet' || hoverPick.kind === 'finding') { const sh = hoverPick.sheet; if (sh) { chart.hiRes = chart.hiRes || new Set(); chart.hiRes.add(sh.sid); texDirty = true; flyTo(chart.sheetPose(sh), 1.4, 0.04); } }
 });
 
@@ -614,6 +617,7 @@ function closePanel() { $('#panel').classList.remove('open'); }
 
 function onKey(ev) {
   if (ev.target.tagName === 'INPUT' || ev.target.tagName === 'SELECT') return;
+  if (touring) { if (ev.key === 'Escape') tour.stop(); return; }
   if (ev.key === 'Escape') {
     if ($('#panel').classList.contains('open')) closePanel();
     else if (chart && chart.traceDid != null) setPatientTrace(null);
@@ -671,10 +675,36 @@ async function step(seconds, fps = 30) {
 }
 hint();
 requestAnimationFrame(frame);
+// ------------------------------------------------------------------ welcome + guided tour
+function setTouring(on) {
+  touring = on;
+  document.body.classList.toggle('touring', on);
+  controls.enabled = !on;
+  if (on) { hideTip(); closePanel(); }
+  if (!on) { hint(); canvas.style.cursor = ''; }
+}
+function showChartTip(i) {
+  archive.hoverIdx = i;
+  const v = archive.chartWorld(i).project(camera);
+  clientXY = [((v.x + 1) / 2) * innerWidth, ((1 - v.y) / 2) * innerHeight];
+  showTip(UI.spineLabel(H.patients[i], H.chapters));
+}
+function hideChartTip() { archive.hoverIdx = -1; hideTip(); }
+const tour = new Tour({
+  flyTo, hospitalPose, setTrace, openPatient, closePatient, setPatientTrace, focusVisit, setMode, setTouring, showChartTip, hideChartTip,
+  get archive() { return archive; }, get H() { return H; }, chart: () => chart,
+});
+function closeIntro() { $('#intro').classList.add('hidden'); }
+$('#starttour').onclick = () => { closeIntro(); tour.start(); };
+$('#explore').onclick = closeIntro;
+$('#abouttour').onclick = () => { $('#intro').classList.remove('hidden'); };
+$('#intro').addEventListener('click', (e) => { if (e.target.id === 'intro') closeIntro(); });
+
 boot().catch((e) => { console.error(e); $('#loadnote').textContent = 'Failed to load: ' + e.message; });
 
 // debug hooks for automated screenshots
 window.__app = {
+  tour,
   step, tick, hover(x, y) { mouse.set((x / innerWidth) * 2 - 1, -(y / innerHeight) * 2 + 1); clientXY = [x, y]; mouseMoved = true; tick(1 / 30, false); },
   click() { if (level === 'hospital' && hoverI >= 0) openPatient(hoverI); else if (level === 'patient') onPatientClick(); },
   async snap(name) { for (let i = 0; i < 3; i++) stage.render(1 / 30); const data = stage.renderer.domElement.toDataURL('image/jpeg', 0.92); await fetch('http://127.0.0.1:8732', { method: 'POST', body: JSON.stringify({ name, data }) }); return name; },
