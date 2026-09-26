@@ -211,3 +211,21 @@ export function panelFace(P) {
     <h3>Home medications</h3><div class="kv">${(pr.home_medications || []).map((m) => row(esc(m.name), m.dose)).join('') || '<div class="note">none</div>'}</div>
     <h3>Master problem list · ${P.problems.length}</h3><div class="list">${dx}</div>`;
 }
+
+// ------------------------------------------------------------------ wing card (level 1)
+export function wingLabel(w, H) {
+  const ch = w.ch;
+  const counts = new Map();
+  for (const i of w.idx) { const b = H.patients[i].blk; counts.set(b, (counts.get(b) || 0) + 1); }
+  const desc = new Map(ch.blocks.map((b) => [b.code, b.desc]));
+  const top = [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const visits = w.idx.reduce((s, i) => s + H.patients[i].n, 0);
+  const title = ch.title.replace(/\s*\([A-Z0-9]+-[A-Z0-9]+\)\s*$/, '');
+  return `<div class="wingcard" style="--c:${chapterCss(ch.no)}">
+    <div class="wtop"><span class="wnum">${esc(ch.roman)}</span><span class="wname">${esc(ch.name)}</span><span class="wrange">${esc(w.range)}</span></div>
+    <div class="wtitle">${esc(title)}</div>
+    <div class="wstats"><b>${w.count}</b> charts · <b>${fmtInt(visits)}</b> visits · <b>${counts.size}</b> block${counts.size === 1 ? '' : 's'}</div>
+    ${top.length ? `<ul>${top.map(([b, n]) => `<li><code>${esc((b || '').replace('-', '–'))}</code><span>${esc((desc.get(b) || '').replace(/\s*\([A-Z0-9]+-[A-Z0-9]+\)\s*$/, ''))}</span><em>${n}</em></li>`).join('')}</ul>` : ''}
+    <div class="whint">Click to filter to this wing</div>
+  </div>`;
+}

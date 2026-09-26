@@ -322,7 +322,7 @@ canvas.addEventListener('pointermove', (e) => {
   clientXY = [e.clientX, e.clientY];
   mouseMoved = true;
 });
-canvas.addEventListener('pointerleave', () => { mouse.set(-9, -9); mouseMoved = true; });
+canvas.addEventListener('pointerleave', () => { mouse.set(-9, -9); mouseMoved = true; if (archive) archive.hoverWing = null; });
 canvas.addEventListener('pointerdown', (e) => { downAt = [e.clientX, e.clientY]; });
 canvas.addEventListener('pointerup', (e) => {
   if (!downAt || touring) return;
@@ -332,6 +332,13 @@ canvas.addEventListener('pointerup', (e) => {
   mouse.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); clientXY = [e.clientX, e.clientY];
   if (level === 'hospital') hoverHospital(); else if (level === 'patient' && chart) hoverPatient();
   if (level === 'hospital' && hoverI >= 0) openPatient(hoverI);
+  else if (level === 'hospital' && archive.hoverWing) {
+    // click a wing: filter to it (click it again to clear)
+    const no = String(archive.hoverWing.ch.no);
+    filt.wing = filt.wing === no ? '' : no;
+    $('#wing').value = filt.wing;
+    applyFilters();
+  }
   else if (level === 'patient') onPatientClick(e);
 });
 canvas.addEventListener('dblclick', () => {
@@ -353,14 +360,18 @@ const hideTip = () => $('#tip').classList.add('hidden');
 
 function hoverHospital() {
   ray.setFromCamera(mouse, camera);
-  const hit = ray.intersectObject(archive.body, false)[0];
-  const i = hit ? hit.instanceId : -1;
+  // nearest of: a chart, a wing's shelving, a wing's lit sign
+  const hit = ray.intersectObjects([archive.body, archive.woodMesh, ...archive.signs], false)[0];
+  const i = hit && hit.object === archive.body ? hit.instanceId : -1;
+  const wing = hit && i < 0 ? (hit.object.userData.wing || archive.wingAt(hit.point)) : null;
   if (i !== hoverI) {
     hoverI = i;
     archive.hoverIdx = i;
-    canvas.style.cursor = i >= 0 ? 'pointer' : '';
   }
+  archive.hoverWing = wing;
+  canvas.style.cursor = i >= 0 || wing ? 'pointer' : '';
   if (i >= 0) showTip(UI.spineLabel(H.patients[i], H.chapters));
+  else if (wing) showTip(UI.wingLabel(wing, H));
   else hideTip();
 }
 
@@ -436,7 +447,7 @@ async function openPatient(i) {
   if (busy || level === 'patient') return;
   busy = true; level = 'flying';
   openIdx = i;
-  hideTip(); hoverI = -1; archive.hoverIdx = -1;
+  hideTip(); hoverI = -1; archive.hoverIdx = -1; archive.hoverWing = null;
   $('#suggest').classList.add('hidden');
   ['#brand', '#searchwrap', '#tracebar'].forEach((s) => $(s).classList.add('hidden'));
   $('#badges').innerHTML = '';
@@ -638,7 +649,7 @@ function onKey(ev) {
 function hint() {
   $('#hint').innerHTML = level === 'patient'
     ? 'Click a problem-list tab to trace it · click any sheet to read it<br>double-click to zoom to a sheet · ← → step through visits · Esc to go back'
-    : 'Drag to orbit · scroll to zoom · right-drag to pan<br>hover a chart to read its spine · click to open it';
+    : 'Drag to orbit · scroll to zoom · right-drag to pan<br>hover a wing or chart to read it · click a chart to open it';
 }
 
 // ------------------------------------------------------------------ loop

@@ -234,6 +234,7 @@ export class Archive {
     woodMesh.castShadow = woodMesh.receiveShadow = true;
     const brassMesh = new THREE.Mesh(mergeGeometries(brassParts), brass);
     this.group.add(woodMesh, brassMesh);
+    this.woodMesh = woodMesh;
 
     // block label inserts (atlas)
     const blocks = [...new Set(this.labelHolders.map((l) => l.blk))];
@@ -442,7 +443,24 @@ export class Archive {
     this.state.aHide.needsUpdate = true;
   }
 
+  /** Which wing a world point belongs to (the shelving is one merged mesh, so resolve by angle). */
+  wingAt(point) {
+    const phi = Math.atan2(point.x, -point.z);
+    let best = null, bd = Infinity;
+    for (const w of this.wings) {
+      const half = (w.w / 2 + UPRIGHT + 0.08) / this.R;
+      const d = Math.abs(phi - w.phi);
+      if (d <= half && d < bd) { bd = d; best = w; }
+    }
+    return best;
+  }
+
   update(dt, camera) {
+    // the hovered wing's sign brightens so it reads as the thing being pointed at
+    for (const w of this.wings) {
+      const target = w === this.hoverWing ? 1.9 : 0.9;
+      w.signMat.emissiveIntensity = damp(w.signMat.emissiveIntensity, target, 8, dt);
+    }
     const S = this.state, T = this.target, n = this.data.patients.length;
     let changed = false;
     for (const k of ['aHi', 'aTr', 'aDim', 'aSlide']) {

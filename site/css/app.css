@@ -269,3 +269,18 @@ body.recording #tourbar .tctl, body.recording #whybtn, body.recording #hint, bod
 .brandbtns { display: flex; gap: 8px; margin-top: 10px; }
 .brandbtns .tourbtn { margin-top: 0; }
 #intro .btn .ico.line { fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+/* wing card */
+.wingcard { background: var(--glass-strong); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 10px; padding: 12px 14px; min-width: 280px; max-width: 360px; box-shadow: 0 14px 34px rgba(0,0,0,0.5); }
+.wingcard .wtop { display: flex; align-items: baseline; gap: 10px; }
+.wingcard .wnum { font-size: 22px; font-weight: 300; color: var(--ink); }
+.wingcard .wname { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.wingcard .wrange { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--brass); }
+.wingcard .wtitle { font-size: 12.5px; color: #d6d0c4; margin: 4px 0 8px; line-height: 1.4; }
+.wingcard .wstats { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; }
+.wingcard .wstats b { color: var(--ink); font-weight: 600; }
+.wingcard ul { list-style: none; margin: 0; padding: 8px 0 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.wingcard li { display: grid; grid-template-columns: 70px 1fr auto; gap: 8px; font-size: 11.5px; color: #cfc9be; align-items: baseline; }
+.wingcard li code { font-family: var(--mono); font-size: 10.5px; color: var(--brass); }
+.wingcard li em { font-style: normal; font-family: var(--mono); color: var(--muted); font-size: 11px; }
+.wingcard .whint { margin-top: 8px; font-size: 10.5px; color: var(--faint); }
